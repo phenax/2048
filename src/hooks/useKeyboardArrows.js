@@ -27,7 +27,9 @@ const useKeyboardArrows = () => {
     };
 
     window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    return () => {
+      window.removeEventListener('keydown', handler);
+    };
   }, []);
 
   return [ direction, setDirection ];

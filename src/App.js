@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Stage, Text, Rect } from 'react-konva';
 import { range } from 'ramda';
 
@@ -8,6 +8,7 @@ import useReducer from './hooks/useReducer';
 import useControls from './hooks/useControls';
 import Random from './utils/Random';
 import Block from './utils/Block';
+import Direction from './utils/Direction';
 
 import rootReducer from './reducers/rootReducer';
 
@@ -31,9 +32,10 @@ const initialState = {
 
 export default () => {
   const [ state, dispatch ] = useReducer(rootReducer, initialState);
+  const numberBlock = useRef(null);
   const [ handlers, { direction } ] = useControls();
 
-  !direction.is('Default') && console.log('>> Move', direction.name);
+  console.log('> >numberBlock', numberBlock);
 
   const boxSize = 100;
   const margin = 10;
@@ -41,7 +43,7 @@ export default () => {
 
   const grid = state.grid.map((row, rIndex) =>
     row.map(({ number }, cIndex) => ({ x, y, size }) => (
-      <React.Fragment>
+      <Group ref={numberBlock}>
         <Rect
           x={x}
           y={y}
@@ -61,7 +63,7 @@ export default () => {
           align="center"
           verticalAlign="middle"
         />
-      </React.Fragment>
+      </Group>
     ))
   );
 
