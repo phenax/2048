@@ -5,26 +5,22 @@ import Direction from '../utils/Direction';
 
 // type GestureData = { xVelocity :: Number, yVelocity :: Number, threshold :: Number };
 
+const THRESHOLD = 0;
+
 // swipeDirection :: GestureData -> Direction
 const swipeDirection = cond([
-  [ ({ xVelocity, threshold }) => -xVelocity > threshold,   () => Direction.Left()    ],
-  [ ({ xVelocity, threshold }) => xVelocity > threshold,    () => Direction.Right()   ],
-  [ ({ yVelocity, threshold }) => -yVelocity > threshold,   () => Direction.Up()      ],
-  [ ({ yVelocity, threshold }) => yVelocity > threshold,    () => Direction.Down()    ],
-  [ T,                                                      () => Direction.Default() ],
+  [ ({ xVelocity, down }) => !down && -xVelocity > THRESHOLD,   () => Direction.Left()    ],
+  [ ({ xVelocity, down }) => !down && xVelocity > THRESHOLD,    () => Direction.Right()   ],
+  [ ({ yVelocity, down }) => !down && -yVelocity > THRESHOLD,   () => Direction.Up()      ],
+  [ ({ yVelocity, down }) => !down && yVelocity > THRESHOLD,    () => Direction.Down()    ],
+  [ T,                                                          () => Direction.Default() ],
 ]);
 
 // (hook) useSwipe :: (() -> ()) -> [ Object (Event -> ()) ]
-const useSwipe = handler => {
+const useSwipe = onSwipe => {
   const [ handlers ] = useGesture({
     transient: true,
-    onAction: data => {
-      console.log('>. data', data);
-      const direction = data.down
-        ? Direction.Default()
-        : swipeDirection({ ...data, threshold: 0 });
-      handler({ direction });
-    },
+    onAction: data => onSwipe({ direction: swipeDirection({ ...data, threshold: 0 }) }),
   });
 
   return handlers;
