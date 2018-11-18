@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { cond, equals, T } from 'ramda';
 
 import Direction from '../utils/Direction';
@@ -12,27 +12,24 @@ const keyDirection = cond([
   [ T,           () => Direction.Default() ],
 ]);
 
-// (hook) useKeyboardArrows :: () -> [ Direction, Direction -> () ]
-const useKeyboardArrows = () => {
-  const [ direction, setDirection ] = useState(Direction.Default());
-
+// (hook) useKeyboardArrows :: (() -> ()) -> ()
+const useKeyboardArrows = handler => {
   useEffect(() => {
-    const handler = e => {
-      const newDirection = keyDirection(e.keyCode);
+    const onKey = e => {
+      const direction = keyDirection(e.keyCode);
 
-      Direction.match(newDirection, {
+      Direction.match(direction, {
         Default: () => {},
-        _: () => setDirection(newDirection),
+        _: () => handler({ direction }),
       });
     };
 
-    window.addEventListener('keydown', handler);
+    window.addEventListener('keydown', onKey);
     return () => {
-      window.removeEventListener('keydown', handler);
+      window.removeEventListener('keydown', onKey);
     };
   }, []);
-
-  return [ direction, setDirection ];
+  return null;
 };
 
 export default useKeyboardArrows;

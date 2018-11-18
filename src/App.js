@@ -1,13 +1,13 @@
-import React, { useRef } from 'react';
-import { Stage, Text, Rect } from 'react-konva';
+import React from 'react';
+import { Stage, Text, Rect, Group } from 'react-konva';
 import { range } from 'ramda';
 
 import RootAction from './actions';
 
 import useReducer from './hooks/useReducer';
 import useControls from './hooks/useControls';
-import Random from './utils/Random';
-import Block from './utils/Block';
+import random from './utils/random';
+import blockUtils from './utils/block-utils';
 import Direction from './utils/Direction';
 
 import rootReducer from './reducers/rootReducer';
@@ -18,61 +18,72 @@ import './App.css';
 
 const GRID_COUNT = 4;
 
+const generateBlock = (row = 0, col = 0) => ({
+  row,
+  col,
+  number: random.item([ 0, 0, 0, 1, 2, 4 ]),
+});
+
 const generateGrid = gridCount => range(0, gridCount).map(row =>
-  range(0, gridCount).map(col => ({
-    row,
-    col,
-    number: Random.item([ 0, 0, 0, 1, 2, 4 ]),
-  }))
+  range(0, gridCount)
+    .map(col => generateBlock(row, col))
 );
 
 const initialState = {
   grid: generateGrid(GRID_COUNT),
 };
 
+const NumberBlock = ({ block, size, x, y }) => {
+  return (
+    <Group>
+      <Rect
+        x={x}
+        y={y}
+        width={size}
+        height={size}
+        fill={blockUtils.getColor(block.number)}
+      />
+      <Text
+        x={x}
+        y={y}
+        width={size}
+        height={size}
+        text={block.number}
+        fontSize={16}
+        fontStyle="bold"
+        fontFamily="Arial"
+        align="center"
+        verticalAlign="middle"
+      />
+      </Group>
+  );
+};
+
+
 export default () => {
   const [ state, dispatch ] = useReducer(rootReducer, initialState);
-  const numberBlock = useRef(null);
-  const [ handlers, { direction } ] = useControls();
-
-  console.log('> >numberBlock', numberBlock);
 
   const boxSize = 100;
   const margin = 10;
   const canvasSize = (boxSize + margin) * GRID_COUNT + margin;
 
-  const grid = state.grid.map((row, rIndex) =>
-    row.map(({ number }, cIndex) => ({ x, y, size }) => (
-      <Group ref={numberBlock}>
-        <Rect
-          x={x}
-          y={y}
-          width={size}
-          height={size}
-          fill={Block.getColor(number)}
-        />
-        <Text
-          x={x}
-          y={y}
-          width={size}
-          height={size}
-          text={number}
-          fontSize={16}
-          fontStyle="bold"
-          fontFamily="Arial"
-          align="center"
-          verticalAlign="middle"
-        />
-      </Group>
-    ))
-  );
+  const handlers = useControls(({ direction }) => {
+    Direction.match(direction, {
+      Default: () => {},
+      Left: () => dispatch(RootAction.MoveLeft(generateBlock)),
+      Right: () => dispatch(RootAction.MoveRight(generateBlock)),
+      Up: () => dispatch(RootAction.MoveUp(generateBlock)),
+      Down: () => dispatch(RootAction.MoveDown(generateBlock)),
+    });
+  });
+
+  const grid = state.grid.map(row =>
+    row.map(block => props =>
+      <NumberBlock {...props} block={block} />));
 
   return (
     <div className="App">
-      <header className="App-header">
-        2048 ({state.update})
-        <button onClick={() => dispatch(RootAction.SwipeLeft())}>Click</button>
-      </header>
+      <header className="App-header">2048</header>
       <div>
         <Stage width={canvasSize} height={canvasSize} {...handlers}>
           <Grid grid={grid} size={boxSize} margin={margin} background={'#eee'} />

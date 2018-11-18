@@ -14,17 +14,20 @@ const swipeDirection = cond([
   [ T,                                                      () => Direction.Default() ],
 ]);
 
-// (hook) useSwipe :: GestureData -> [ Object (Event -> ()), Direction ]
-const useSwipe = ({ threshold = 0 } = {}) => {
-  const [ handlers, data ] = useGesture();
+// (hook) useSwipe :: (() -> ()) -> [ Object (Event -> ()) ]
+const useSwipe = handler => {
+  const [ handlers ] = useGesture({
+    transient: true,
+    onAction: data => {
+      console.log('>. data', data);
+      const direction = data.down
+        ? Direction.Default()
+        : swipeDirection({ ...data, threshold: 0 });
+      handler({ direction });
+    },
+  });
 
-  !data.down && console.log('>> data', data.xVelocity, data.yVelocity, swipeDirection({ ...data, threshold }).name);
-
-  const direction = data.down
-    ? Direction.Default()
-    : swipeDirection({ ...data, threshold });
-
-  return [ handlers, direction ];
+  return handlers;
 };
 
 export default useSwipe;
