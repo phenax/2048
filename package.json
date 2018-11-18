@@ -3,8 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
+    "enum-fp": "^1.0.0-alpha.3",
+    "konva": "^2.5.1",
+    "pipey": "^0.0.4",
+    "ramda": "^0.26.0",
+    "react": "^16.7.0-alpha.2",
+    "react-dom": "^16.7.0-alpha.2",
+    "react-konva": "^16.6.31",
     "react-scripts": "2.1.1"
   },
   "scripts": {
