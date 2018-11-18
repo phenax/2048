@@ -10,7 +10,8 @@
     "react": "^16.7.0-alpha.2",
     "react-dom": "^16.7.0-alpha.2",
     "react-konva": "^16.6.31",
-    "react-scripts": "2.1.1"
+    "react-scripts": "2.1.1",
+    "react-with-gesture": "^2.0.4"
   },
   "scripts": {
     "start": "react-scripts start",

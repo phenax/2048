@@ -5,6 +5,7 @@ import { range } from 'ramda';
 import RootAction from './actions';
 
 import useReducer from './hooks/useReducer';
+import useControls from './hooks/useControls';
 import Random from './utils/Random';
 import Block from './utils/Block';
 
@@ -30,6 +31,9 @@ const initialState = {
 
 export default () => {
   const [ state, dispatch ] = useReducer(rootReducer, initialState);
+  const [ handlers, { direction } ] = useControls();
+
+  !direction.is('Default') && console.log('>> Move', direction.name);
 
   const boxSize = 100;
   const margin = 10;
@@ -68,7 +72,7 @@ export default () => {
         <button onClick={() => dispatch(RootAction.SwipeLeft())}>Click</button>
       </header>
       <div>
-        <Stage width={canvasSize} height={canvasSize}>
+        <Stage width={canvasSize} height={canvasSize} {...handlers}>
           <Grid grid={grid} size={boxSize} margin={margin} background={'#eee'} />
         </Stage>
       </div>
