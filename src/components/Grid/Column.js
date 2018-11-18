@@ -6,7 +6,7 @@ const getCoords = ({ row, col, size, margin }) => ({
   y: row * (size + margin) + margin,
 });
 
-export default ({ render, row = 0, col = 0, margin, size, background = '#888', border }) => (
+export default ({ render, row = 0, col = 0, margin, size, background, border }) => (
   <Group>
     <Rect
       {...getCoords({ row, col, margin, size })}
