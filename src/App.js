@@ -18,15 +18,12 @@ import './App.css';
 
 const GRID_COUNT = 4;
 
-const generateBlock = (row = 0, col = 0) => ({
-  row,
-  col,
-  number: random.item([ 0, 0, 0, 1, 2, 4 ]),
-});
+const randomBlock = () =>
+  blockUtils.Block(random.item([ 0, 0, 0, 1, 2, 4 ]));
 
-const generateGrid = gridCount => range(0, gridCount).map(row =>
+const generateGrid = gridCount => range(0, gridCount).map(() =>
   range(0, gridCount)
-    .map(col => generateBlock(row, col))
+    .map(randomBlock)
 );
 
 const initialState = {
@@ -59,7 +56,6 @@ const NumberBlock = ({ block, size, x, y }) => {
   );
 };
 
-
 export default () => {
   const [ state, dispatch ] = useReducer(rootReducer, initialState);
 
@@ -70,10 +66,10 @@ export default () => {
   const handlers = useControls(({ direction }) => {
     Direction.match(direction, {
       Default: () => {},
-      Left: () => dispatch(RootAction.MoveLeft(generateBlock)),
-      Right: () => dispatch(RootAction.MoveRight(generateBlock)),
-      Up: () => dispatch(RootAction.MoveUp(generateBlock)),
-      Down: () => dispatch(RootAction.MoveDown(generateBlock)),
+      Left: () => dispatch(RootAction.MoveLeft(randomBlock)),
+      Right: () => dispatch(RootAction.MoveRight(randomBlock)),
+      Up: () => dispatch(RootAction.MoveUp(randomBlock)),
+      Down: () => dispatch(RootAction.MoveDown(randomBlock)),
     });
   });
 
