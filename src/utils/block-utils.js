@@ -1,3 +1,4 @@
+import { lensProp } from 'ramda';
 
 const blockUtils = {
   scaleUnit: 9,//Random.int(0, 100),
@@ -9,5 +10,7 @@ const blockUtils = {
     blockUtils.getRgbUnit(83, number),
   ].join(',')})`,
 };
+
+blockUtils.Block.number = lensProp('number');
 
 export default blockUtils;
