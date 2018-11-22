@@ -7,14 +7,12 @@ import RootAction from './actions';
 import useReducer from './hooks/useReducer';
 import useControls from './hooks/useControls';
 import random from './utils/random';
-import blockUtils from './utils/block-utils';
+import * as blockUtils from './utils/block-utils';
 import Direction from './utils/Direction';
 
 import rootReducer from './reducers/rootReducer';
 
 import Grid from './components/Grid';
-
-import './App.css';
 
 const GRID_COUNT = 4;
 

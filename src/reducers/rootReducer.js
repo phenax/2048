@@ -1,10 +1,8 @@
 import Enum from 'enum-fp';
-import { compose, transpose, useWith, head, view, set, map, filter, groupWith, equals } from 'ramda';
+import { compose, transpose, eqProps, head, map, filter, groupWith } from 'ramda';
 
 import RootAction from '../actions';
-import blockUtils from '../utils/block-utils';
-
-const { Block } = blockUtils;
+import { Block } from '../utils/block-utils';
 
 // :: FlowDirection
 const FlowDirection = Enum([ 'Left', 'Right' ]);
@@ -17,8 +15,7 @@ const log = msg => data => {
   return data;
 };
 
-const getNumber = view(Block.number);
-const setNumber = set(Block.number);
+const getNumber = x => x.number;
 
 // sumMatches :: [Block] -> [Block]
 const sumMatches = compose(
@@ -26,7 +23,7 @@ const sumMatches = compose(
     Block,
     xs => xs.length * getNumber(head(xs)),
   )),
-  groupWith(useWith(equals, [getNumber, getNumber])),
+  groupWith(eqProps('number')),
 );
 
 // padRow :: Number -> FlowDirection -> (() -> Block) -> [Block] -> [Block]
