@@ -1,5 +1,5 @@
 import Enum from 'enum-fp';
-import { compose, transpose, eqProps, head, map, filter, groupWith } from 'ramda';
+import { range, compose, transpose, eqProps, head, last, map, filter, groupWith } from 'ramda';
 
 import RootAction from '../actions';
 import { Block } from '../utils/block-utils';
@@ -7,14 +7,20 @@ import { Block } from '../utils/block-utils';
 // :: FlowDirection
 const FlowDirection = Enum([ 'Left', 'Right' ]);
 
+FlowDirection.concatArray = (arr1, arr2) => FlowDirection.cata({
+  Left: () => arr1.concat(arr2),
+  Right: () => arr2.concat(arr1),
+});
+
 // getZero :: () -> Block
 const getZero = () => Block(0);
 
-const log = msg => data => {
-  console.log(msg, data);
-  return data;
-};
+// const log = msg => data => {
+//   console.log(msg, data);
+//   return data;
+// };
 
+// getNumber :: Block -> Number
 const getNumber = x => x.number;
 
 // sumMatches :: [Block] -> [Block]
@@ -26,25 +32,27 @@ const sumMatches = compose(
   groupWith(eqProps('number')),
 );
 
-// padRow :: Number -> FlowDirection -> (() -> Block) -> [Block] -> [Block]
+// padRow :: (Number, Flow(() -> Block)) -> [Block] -> [Block]
 const padRow = (size, direction, getBlock) => row => {
   const paddingLen = size - row.length;
   if(paddingLen === 0) return row;
-  const padding = Array(paddingLen).fill(null).map(getBlock);
-  return FlowDirection.match(direction, {
-    Left: () => row.concat(padding),
-    Right: () => padding.concat(row),
-  });
+  const padding = range(0, paddingLen).map(getBlock);
+  return FlowDirection.concatArray(row, padding)(direction);
 };
 
-// moveHorizontal :: (FlowDirection, () -> Block) -> [[Block]] -> [[Block]]
+const addBlock = (newBlock, direction) => row => FlowDirection.match(direction, {
+  Left: () => getNumber(last(row)) === 0 ? [ ...row.slice(0, row.length - 1), newBlock() ] : row,
+  Right: () => getNumber(head(row)) === 0 ? [ newBlock(), ...row.slice(1, row.length) ] : row,
+});
+
+// moveHorizontal :: (Number, FlowDirection, () -> Block) -> [[Block]] -> [[Block]]
 const moveHorizontal = (size, direction, newBlock) => grid => grid
   .map(filter(item => getNumber(item) !== 0)) // Remove zeroes
   .map(sumMatches) // Sum the close 
   .map(padRow(size, direction, getZero))
-  .map(row => getNumber(row[0]) === 0 ? [newBlock(), ...row.slice(1, row.length)] : row);
+  .map(addBlock(newBlock, direction));
 
-// moveVertical :: (FlowDirection, () -> Block) -> [[Block]] -> [[Block]]
+// moveVertical :: (Number, FlowDirection, () -> Block) -> [[Block]] -> [[Block]]
 const moveVertical = (size, direction, newBlock) => compose(
   transpose,
   moveHorizontal(size, direction, newBlock),

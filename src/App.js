@@ -16,13 +16,9 @@ import Grid from './components/Grid';
 
 const GRID_COUNT = 4;
 
-const randomBlock = () =>
-  blockUtils.Block(random.item([ 0, 0, 0, 1, 2, 4 ]));
+const randomBlock = () => blockUtils.Block(random.item([ 0, 0, 0, 1, 2, 4 ]));
 
-const generateGrid = gridCount => range(0, gridCount).map(() =>
-  range(0, gridCount)
-    .map(randomBlock)
-);
+const generateGrid = gridCount => range(0, gridCount).map(() => range(0, gridCount).map(randomBlock));
 
 const initialState = {
   grid: generateGrid(GRID_COUNT),
