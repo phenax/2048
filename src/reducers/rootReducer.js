@@ -1,51 +1,69 @@
 import Enum from 'enum-fp';
-import { compose, transpose, pathOr } from 'ramda';
+import { compose, transpose, prop, pathOr, curry, map, filter, groupWith, equals } from 'ramda';
 
 import RootAction from '../actions';
 import blockUtils from '../utils/block-utils';
 
+// :: FlowDirection
 const FlowDirection = Enum([ 'Left', 'Right' ]);
 
-const sumMatches = row => row.reduce((acc, item) => [
-  ...acc,
-  item.number === pathOr(0, [acc.length - 1, 'number'], acc)
-    ? ({ ...item, number: item.number * 2 })
-    : ({ ...item })
-], []);
-
-// padRow :: Number -> FlowDirection -> (() -> Block) -> [Block] -> [Block]
-const padRow = (length, direction, getBlock, row) => {
-  const padding = Array(length).fill(null).map(getBlock);
-  return FlowDirection.match(direction, {
-    Left: () => row.concat(padding),
-    Right: () => padding.concat(row),
-  });
-};
-
-// compactRow :: FlowDirection -> [Block] -> [Block]
-const compactRow = direction => row => {
-  const nonZeros = row.filter(item => item.number !== 0);
-  const getZero = () => blockUtils.Block(0);
-  return padRow(row.length - nonZeros.length, direction, getZero, nonZeros);
-};
+// getZero :: () -> Block
+const getZero = () => blockUtils.Block(0);
 
 const log = msg => data => {
   console.log(msg, data);
   return data;
 };
 
+// sumMatches :: [Block] -> [Block]
+const sumMatches = compose(
+  map(compose(
+    blockUtils.Block,
+    xs => xs[0] ? (xs.length * xs[0].number) : 0,
+  )),
+  groupWith((a, b) => equals(a.number, b.number)),
+);
+
+// padRow :: Number -> FlowDirection -> (() -> Block) -> [Block] -> [Block]
+const padRow = (paddingLen, direction, getBlock, row) => {
+  if(paddingLen === 0) return row;
+  const padding = Array(paddingLen).fill(null).map(getBlock);
+  return FlowDirection.match(direction, {
+    Left: () => row.concat(padding),
+    Right: () => padding.concat(row),
+  });
+};
+
+// moveHorizontal :: (FlowDirection, () -> Block) -> [[Block]] -> [[Block]]
+const moveHorizontal = (direction, newBlock) => grid => grid
+  .map(filter(item => item.number !== 0)) // Remove zeroes
+  .map(sumMatches) // Sum the close 
+  .map(row => padRow(grid[0].length - row.length, direction, getZero, row))
+  .map(row => row[0].number === 0 ? [newBlock(), ...row.slice(1, row.length)] : row);
+
+// moveVertical :: (FlowDirection, () -> Block) -> [[Block]] -> [[Block]]
+const moveVertical = (direction, newBlock) => compose(
+  transpose,
+  moveHorizontal(direction, newBlock),
+  transpose,
+);
+
 export default RootAction.cata({
-  MoveRight: getNextValue => state => {
-    const direction = FlowDirection.Right();
-    return {
-      ...state,
-      grid: state.grid
-        .map(compactRow(direction))
-        // .map(sumMatches) // Sum the close 
-        // .map(row => padRow(state.grid[0].length, direction))
-        // .map((row, rIndex) => [ getNextValue(rIndex, 0), ...row ]) // Prepend new item
-        // .map(row => row.slice(0, state.grid[0].length)), // Clamp the list for the length
-    };
-  },
+  MoveLeft: getNextBlock => state => ({
+    ...state,
+    grid: moveHorizontal(FlowDirection.Left(), getNextBlock)(state.grid),
+  }),
+  MoveRight: getNextBlock => state => ({
+    ...state,
+    grid: moveHorizontal(FlowDirection.Right(), getNextBlock)(state.grid),
+  }),
+  MoveUp: getNextBlock => state => ({
+    ...state,
+    grid: moveVertical(FlowDirection.Left(), getNextBlock)(state.grid),
+  }),
+  MoveDown: getNextBlock => state => ({
+    ...state,
+    grid: moveVertical(FlowDirection.Right(), getNextBlock)(state.grid),
+  }),
   _: () => state => state,
 });
