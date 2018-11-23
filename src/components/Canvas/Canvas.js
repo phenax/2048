@@ -1,14 +1,10 @@
-import React, { memo, useRef, useState, useEffect } from 'react';
+import React, { memo } from 'react';
 
-import CanvasContext, { getSafeCanvasCtx } from './CanvasContext';
+import CanvasContext from './CanvasContext';
+import useCanvasCtx from '../../hooks/useCanvasCtx';
 
 const Canvas = memo(({ width, height, children, ...props }) => {
-  const [ ctx, setCanvasCtx ] = useState(getSafeCanvasCtx(null));
-  const canvasRef = useRef();
-
-  useEffect(() => {
-    setCanvasCtx(getSafeCanvasCtx(canvasRef.current));
-  }, [canvasRef]);
+  const [ canvasRef, ctx ] = useCanvasCtx();
 
   const ctxData = { ctx, width, height };
 
