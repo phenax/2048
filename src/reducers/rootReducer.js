@@ -1,4 +1,5 @@
 import Enum from 'enum-fp';
+import { createPipe } from 'pipey';
 import { range, compose, transpose, eqProps, head, last, map, chain, filter, groupWith } from 'ramda';
 
 import RootAction from '../actions';
@@ -12,6 +13,8 @@ FlowDirection.concatArray = (arr1, arr2) => FlowDirection.cata({
   Left: () => arr1.concat(arr2),
   Right: () => arr2.concat(arr1),
 });
+
+const mapIndexed = createPipe('map');
 
 // getNumber :: Block -> Number
 const getNumber = x => x.number;
@@ -35,7 +38,7 @@ const sumMatches = direction => compose(
   groupWith(eqProps('number')),
 );
 
-// padRow :: (Number, Flow, () -> Block) -> [Block] -> [Block]
+// padRow :: (Number, FlowDirection, () -> Block) -> [Block] -> [Block]
 const padRow = (size, direction, getBlock) => row => {
   const paddingLen = size - row.length;
   if(paddingLen === 0) return row;
@@ -43,17 +46,19 @@ const padRow = (size, direction, getBlock) => row => {
   return FlowDirection.concatArray(row, padding)(direction);
 };
 
+// addBlock :: ([Block], FlowDirection) -> ([Block], index) -> [Block]
 const addBlock = (newRow, direction) => (row, index) => FlowDirection.match(direction, {
   Left: () => getLastNumber(row) === 0 ? [ ...row.slice(0, row.length - 1), newRow[index] ] : row,
   Right: () => getFirstNumber(row) === 0 ? [ newRow[index], ...row.slice(1, row.length) ] : row,
 });
 
 // moveHorizontal :: (Number, FlowDirection, [Block]) -> [[Block]] -> [[Block]]
-const moveHorizontal = (size, direction, newBlock) => grid => grid
-  .map(filter(item => getNumber(item) !== 0)) // Remove zeroes
-  .map(sumMatches(direction)) // Sum the close 
-  .map(padRow(size, direction, zero))
-  .map(addBlock(newBlock, direction));
+const moveHorizontal = (size, direction, newBlock) => compose(
+  mapIndexed(addBlock(newBlock, direction)),
+  map(padRow(size, direction, zero)),
+  map(sumMatches(direction)),
+  map(filter(item => getNumber(item) !== 0)),
+);
 
 // moveVertical :: (Number, FlowDirection, [Block]) -> [[Block]] -> [[Block]]
 const moveVertical = (size, direction, newRow) => compose(
@@ -63,21 +68,21 @@ const moveVertical = (size, direction, newRow) => compose(
 );
 
 export default RootAction.cata({
-  MoveLeft: newRow => state => ({
+  MoveLeft: newRow => ({ grid, ...state }) => ({
     ...state,
-    grid: moveHorizontal(state.grid[0].length, FlowDirection.Left(), newRow)(state.grid),
+    grid: moveHorizontal(grid.length, FlowDirection.Left(), newRow)(grid),
   }),
-  MoveRight: newRow => state => ({
+  MoveRight: newRow => ({ grid, ...state }) => ({
     ...state,
-    grid: moveHorizontal(state.grid[0].length, FlowDirection.Right(), newRow)(state.grid),
+    grid: moveHorizontal(grid.length, FlowDirection.Right(), newRow)(grid),
   }),
-  MoveUp: newRow => state => ({
+  MoveUp: newRow => ({ grid, ...state }) => ({
     ...state,
-    grid: moveVertical(state.grid[0].length, FlowDirection.Left(), newRow)(state.grid),
+    grid: moveVertical(grid.length, FlowDirection.Left(), newRow)(grid),
   }),
-  MoveDown: newRow => state => ({
+  MoveDown: newRow => ({ grid, ...state }) => ({
     ...state,
-    grid: moveVertical(state.grid[0].length, FlowDirection.Right(), newRow)(state.grid),
+    grid: moveVertical(grid.length, FlowDirection.Right(), newRow)(grid),
   }),
-  _: () => state => state,
+  _: () => ({ grid, ...state }) => state,
 });
