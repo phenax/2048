@@ -60,7 +60,7 @@ export default React.memo(() => {
 
   const handlers = useControls(({ direction }) => {
     const newRow = range(0, GRID_COUNT).map(() => blockUtils.Block(0));
-    newRow[random.int(0, GRID_COUNT)] = blockUtils.Block(random.int(0, GRID_COUNT));
+    newRow[random.int(0, GRID_COUNT)] = blockUtils.Block(random.item([ 0, 1, 2, 4 ]));
 
     Direction.match(direction, {
       Default: () => {},
