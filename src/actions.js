@@ -1,6 +1,12 @@
-import Enum from 'enum-fp';
-// import T from 'enum-fp/types';
+import Enum, { T } from 'enum-fp';
 
-const RootAction = Enum([ 'MoveLeft', 'MoveRight', 'MoveUp', 'MoveDown' ]);
+const Row = T.List(T.Record({ number: T.Number() }));
+
+const RootAction = Enum({
+  MoveLeft: [ Row ],
+  MoveRight: [ Row ],
+  MoveUp: [ Row ],
+  MoveDown: [ Row ],
+});
 
 export default RootAction;
