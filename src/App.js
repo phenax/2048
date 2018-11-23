@@ -17,7 +17,7 @@ import Canvas, { Rect, Text } from './components/Canvas';
 
 const GRID_COUNT = 4;
 
-const randomBlock = () => blockUtils.Block(random.item([ 0, 0, 0, 1, 2, 4 ]));
+const randomBlock = () => blockUtils.Block(random.item([ 0, 0, 0, 0, 0, 1, 2, 4 ]));
 
 const generateGrid = gridCount => range(0, gridCount).map(() => range(0, gridCount).map(randomBlock));
 
@@ -51,7 +51,7 @@ const NumberBlock = ({ block, size, x, y }) => {
   );
 };
 
-export default () => {
+export default React.memo(() => {
   const [ state, dispatch ] = useReducer(rootReducer, initialState);
 
   const boxSize = 100;
@@ -59,12 +59,15 @@ export default () => {
   const canvasSize = (boxSize + margin) * GRID_COUNT + margin;
 
   const handlers = useControls(({ direction }) => {
+    const newRow = range(0, GRID_COUNT).map(() => blockUtils.Block(0));
+    newRow[random.int(0, GRID_COUNT)] = blockUtils.Block(random.int(0, GRID_COUNT));
+
     Direction.match(direction, {
       Default: () => {},
-      Left: () => dispatch(RootAction.MoveLeft(randomBlock)),
-      Right: () => dispatch(RootAction.MoveRight(randomBlock)),
-      Up: () => dispatch(RootAction.MoveUp(randomBlock)),
-      Down: () => dispatch(RootAction.MoveDown(randomBlock)),
+      Left: () => dispatch(RootAction.MoveLeft(newRow)),
+      Right: () => dispatch(RootAction.MoveRight(newRow)),
+      Up: () => dispatch(RootAction.MoveUp(newRow)),
+      Down: () => dispatch(RootAction.MoveDown(newRow)),
     });
   });
 
@@ -82,4 +85,4 @@ export default () => {
       </div>
     </div>
   );
-};
+});
