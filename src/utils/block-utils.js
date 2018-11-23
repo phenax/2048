@@ -9,16 +9,13 @@ export const Block = number => ({ number });
 // zero :: () -> Block
 export const zero = () => Block(0);
 
-// getRgbUnit :: (Number, Number) -> Number
-export const getRgbUnit = (scale, number) =>
-  number === 0 ? 240 : Math.floor(9 * scale * number) % 255;
-
 // getColor :: Number -> String
-export const getColor = number =>
-  `rgb(${[
-    getRgbUnit(1, number),
-    getRgbUnit(39, number),
-    getRgbUnit(83, number),
+export const getColor = number => number === 0
+  ? 'rgb(240, 240, 240)'
+  : `hsl(${[
+    `${150 + (10 * (Math.log2(number) % 10))}`,
+    '60%',
+    '58%',
   ].join(',')})`;
 
 const mapIndexed = createPipe('map');
