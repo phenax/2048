@@ -17,15 +17,22 @@ import Grid from './components/Grid';
 import Canvas from './components/Canvas';
 import NumberBlock from './components/NumberBlock';
 
+// toNumberGrid :: [[Block]] -> [[React.Component]]
 const toNumberGrid =
   map(map(block => props => <NumberBlock {...props} block={block} />));
+
+// generateRandomRow :: () -> [Block]
+const generateRandomRow = () => {
+  const newRow = range(0, GRID_COUNT).map(blockUtils.zero);
+  newRow[random.int(0, GRID_COUNT)] = blockUtils.randomBlock([ 0, 1, 2, 4 ]);
+  return newRow;
+};
 
 export default React.memo(() => {
   const [ state, dispatch ] = useReducer(rootReducer, initialState);
 
   const handlers = useControls(({ direction }) => {
-    const newRow = range(0, GRID_COUNT).map(blockUtils.zero);
-    newRow[random.int(0, GRID_COUNT)] = blockUtils.Block(random.item([ 0, 1, 2, 4 ]));
+    const newRow = generateRandomRow();
 
     Direction.match(direction, {
       Default: () => {},

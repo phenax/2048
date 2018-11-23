@@ -1,6 +1,7 @@
 import { createPipe } from 'pipey';
 import { range, compose, transpose, eqProps, head, last, map, chain, filter, groupWith } from 'ramda';
 
+import random from './random';
 import FlowDirection from './FlowDirection';
 
 // :: Block
@@ -8,6 +9,9 @@ export const Block = number => ({ number });
 
 // zero :: () -> Block
 export const zero = () => Block(0);
+
+// randomBlock :: () -> Block
+export const randomBlock = compose(Block, random.item);
 
 // isZero :: Block -> Boolean
 export const isZero = block => block.number === 0;
