@@ -9,44 +9,13 @@ import useControls from './hooks/useControls';
 import random from './utils/random';
 import * as blockUtils from './utils/block-utils';
 import Direction from './utils/Direction';
+import { GRID_COUNT } from './utils/constants';
 
-import rootReducer from './reducers/rootReducer';
+import rootReducer, { initialState } from './reducers/rootReducer';
 
 import Grid from './components/Grid';
-import Canvas, { Rect, Text } from './components/Canvas';
-
-const GRID_COUNT = 4;
-
-const randomBlock = () => blockUtils.Block(random.item([ 0, 0, 0, 0, 0, 1, 2, 4 ]));
-
-const generateGrid = gridCount => range(0, gridCount).map(() => range(0, gridCount).map(randomBlock));
-
-const initialState = {
-  grid: generateGrid(GRID_COUNT),
-};
-
-const NumberBlock = ({ block, size, x, y }) => {
-  return (
-    <React.Fragment>
-      <Rect
-        x={x}
-        y={y}
-        width={size}
-        height={size}
-        fill={blockUtils.getColor(block.number)}
-      />
-      <Text
-        x={x}
-        y={y}
-        width={size}
-        height={size}
-        text={block.number}
-        fontSize={16}
-        fontFamily="Arial"
-      />
-    </React.Fragment>
-  );
-};
+import Canvas from './components/Canvas';
+import NumberBlock from './components/NumberBlock';
 
 export default React.memo(() => {
   const [ state, dispatch ] = useReducer(rootReducer, initialState);
@@ -56,7 +25,7 @@ export default React.memo(() => {
   const canvasSize = (boxSize + margin) * GRID_COUNT + margin;
 
   const handlers = useControls(({ direction }) => {
-    const newRow = range(0, GRID_COUNT).map(() => blockUtils.Block(0));
+    const newRow = range(0, GRID_COUNT).map(blockUtils.zero);
     newRow[random.int(0, GRID_COUNT)] = blockUtils.Block(random.item([ 0, 1, 2, 4 ]));
 
     Direction.match(direction, {

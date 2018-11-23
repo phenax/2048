@@ -1,7 +1,19 @@
+import { range } from 'ramda';
+
 import RootAction from '../actions';
 
 import FlowDirection from '../utils/FlowDirection';
-import { moveHorizontal, moveVertical } from '../utils/block-utils';
+import random from '../utils/random';
+import { moveHorizontal, moveVertical, Block } from '../utils/block-utils';
+import { GRID_COUNT } from '../utils/constants';
+
+const randomBlock = () => Block(random.item([ 0, 0, 0, 0, 0, 1, 2, 4 ]));
+
+const generateGrid = gridCount => range(0, gridCount).map(() => range(0, gridCount).map(randomBlock));
+
+export const initialState = {
+  grid: generateGrid(GRID_COUNT),
+};
 
 export default RootAction.cata({
   MoveLeft: newRow => ({ grid, ...state }) => ({
