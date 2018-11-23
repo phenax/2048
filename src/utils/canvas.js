@@ -36,7 +36,7 @@ export const setFontFamily = curry((family, ctx) => {
 
 export const setFontSize = curry((size, ctx) => {
   const [, family] = `${ctx.font}`.split(' ');
-  ctx.font = `${size} ${family}`;
+  ctx.font = `${size}px ${family}`;
   return ctx;
 });
 

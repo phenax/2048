@@ -1,6 +1,7 @@
 import React from 'react';
 import { Rect, Text } from './Canvas';
 import { getColor, isZero } from '../utils/block-utils';
+import { FONT_SIZE } from '../utils/constants';
 
 const NumberBlock = ({ block, size, x, y }) => {
   const bounds = { x, y, width: size, height: size };
@@ -11,7 +12,7 @@ const NumberBlock = ({ block, size, x, y }) => {
         {...bounds}
         text={block.number}
         color="#333"
-        fontSize={25}
+        fontSize={FONT_SIZE}
         fontFamily="Arial"
       />}
     </React.Fragment>
