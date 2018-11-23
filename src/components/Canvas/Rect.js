@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 
 import CanvasContext from './CanvasContext';
 import { draw, drawRect, setFill } from '../../utils/canvas';
@@ -9,8 +9,10 @@ const renderRect = ({ width, height, x, y, fill }) => draw(
   drawRect(x, y, width, height),
 );
 
-export default props => {
+const Rect = React.memo(props => {
   const { ctx } = useContext(CanvasContext);
   renderRect(props)(ctx);
   return null;
-};
+});
+
+export default Rect;

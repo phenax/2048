@@ -3,7 +3,7 @@ import React from 'react';
 import Row from './Row';
 import Column from './Column';
 
-export default ({ grid, ...props }) => (
+const Grid = ({ grid, ...props }) => (
   <React.Fragment>
     {grid.map((columns, row) => (
       <Row key={row}>
@@ -14,3 +14,5 @@ export default ({ grid, ...props }) => (
     ))}
   </React.Fragment>
 );
+
+export default Grid;

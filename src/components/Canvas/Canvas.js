@@ -1,9 +1,9 @@
-import React, { memo } from 'react';
+import React from 'react';
 
 import CanvasContext, { CanvasData } from './CanvasContext';
 import useCanvasCtx from '../../hooks/useCanvasCtx';
 
-const Canvas = memo(({ width, height, children, ...props }) => {
+const Canvas = React.memo(({ width, height, children, ...props }) => {
   const [ canvasRef, ctx ] = useCanvasCtx();
 
   return (

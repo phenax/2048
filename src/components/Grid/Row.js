@@ -1,3 +1,5 @@
 import React from 'react';
 
-export default ({ children }) => <React.Fragment>{children}</React.Fragment>;
+const Row = ({ children }) => <React.Fragment>{children}</React.Fragment>;
+
+export default Row;

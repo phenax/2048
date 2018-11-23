@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 
 import CanvasContext from './CanvasContext';
 import { draw, setFont, drawText } from '../../utils/canvas';
@@ -15,8 +15,10 @@ const renderText = ({
   drawText(text, x, y, width, height),
 );
 
-export default props => {
+const Text = React.memo(props => {
   const { ctx } = useContext(CanvasContext);
   renderText(props)(ctx);
   return null;
-};
+});
+
+export default Text;

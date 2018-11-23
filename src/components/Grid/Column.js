@@ -6,7 +6,7 @@ const getCoords = ({ row, col, size, margin }) => ({
   y: row * (size + margin) + margin,
 });
 
-export default ({ render, row = 0, col = 0, margin, size, background }) => (
+const Column = ({ render, row = 0, col = 0, margin, size, background }) => (
   <React.Fragment>
     <Rect
       {...getCoords({ row, col, margin, size })}
@@ -17,3 +17,5 @@ export default ({ render, row = 0, col = 0, margin, size, background }) => (
     {render({ ...getCoords({ row, col, margin, size }), size, margin })}
   </React.Fragment>
 );
+
+export default Column;
