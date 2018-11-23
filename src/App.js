@@ -14,8 +14,7 @@ import Direction from './utils/Direction';
 import rootReducer from './reducers/rootReducer';
 
 import Grid from './components/Grid';
-import Canvas from './components/Canvas';
-import Rectangle from './components/Canvas/Rect';
+import Canvas, { Rect as Rectangle, Text as CText } from './components/Canvas';
 
 const GRID_COUNT = 4;
 
@@ -78,9 +77,17 @@ export default () => {
     <div className="App">
       <header className="App-header">2048</header>
       <div style={{ padding: '20px' }}>
-        <Canvas height={100} width={100}>
-          <Rectangle x={10} y={10} height={10} width={10} fill={'red'} />
-          <Rectangle x={50} y={50} height={10} width={10} fill={'blue'} />
+        <Canvas height={500} width={500}>
+          <Rectangle x={10} y={10} height={50} width={300} fill="#888" />
+          <CText
+            text="Hello world"
+            x={10} y={10}
+            height={50} width={300}
+            color="#000"
+            font="16px sans-serif"
+            textAlign="center"
+            verticalAlign="middle"
+          />
         </Canvas>
       </div>
       <div>
