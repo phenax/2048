@@ -1,5 +1,5 @@
 import { createPipe } from 'pipey';
-import { range, compose, transpose, eqProps, head, last, map, chain, filter, groupWith } from 'ramda';
+import { range, compose, transpose, eqProps, head, last, map, chain, filter, groupWith, complement } from 'ramda';
 
 import random from './random';
 import FlowDirection from './FlowDirection';
@@ -62,7 +62,7 @@ export const moveHorizontal = (size, direction, newBlock) => compose(
   mapIndexed(addBlock(newBlock, direction)),
   map(padRow(size, direction, zero)),
   map(sumMatches(direction)),
-  map(filter(isZero)),
+  map(filter(complement(isZero))),
 );
 
 // moveVertical :: (Number, FlowDirection, [Block]) -> [[Block]] -> [[Block]]
