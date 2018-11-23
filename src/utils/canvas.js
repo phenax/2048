@@ -29,13 +29,13 @@ export const draw = (...fns) => pipe(
 );
 
 export const setFontFamily = curry((family, ctx) => {
-  const [size, _] = `${ctx.font}`.split(' ');
+  const [size] = `${ctx.font}`.split(' ');
   ctx.font = `${size} ${family}`;
   return ctx;
 });
 
 export const setFontSize = curry((size, ctx) => {
-  const [_, family] = `${ctx.font}`.split(' ');
+  const [, family] = `${ctx.font}`.split(' ');
   ctx.font = `${size} ${family}`;
   return ctx;
 });

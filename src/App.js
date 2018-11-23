@@ -42,12 +42,9 @@ const NumberBlock = ({ block, size, x, y }) => {
         height={size}
         text={block.number}
         fontSize={16}
-        fontStyle="bold"
         fontFamily="Arial"
-        align="center"
-        verticalAlign="middle"
       />
-      </React.Fragment>
+    </React.Fragment>
   );
 };
 

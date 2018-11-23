@@ -3,8 +3,6 @@ import { range, compose, transpose, eqProps, head, last, map, chain, filter, gro
 
 import FlowDirection from './FlowDirection';
 
-const SCALE_UNIT = 9;
-
 // :: Block
 export const Block = number => ({ number });
 
@@ -13,7 +11,7 @@ export const zero = () => Block(0);
 
 // getRgbUnit :: (Number, Number) -> Number
 export const getRgbUnit = (scale, number) =>
-  number === 0 ? 240 : Math.floor(SCALE_UNIT * scale * number) % 255;
+  number === 0 ? 240 : Math.floor(9 * scale * number) % 255;
 
 // getColor :: Number -> String
 export const getColor = number =>
