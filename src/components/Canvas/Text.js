@@ -1,10 +1,9 @@
 import { useContext } from 'react';
 
 import CanvasContext from './CanvasContext';
-// import { fmap } from '../../utils/Maybe';
-
 import { draw, setFont, drawText } from '../../utils/canvas';
 
+// renderText :: TextProps -> Maybe CanvasRenderingContext2D -> Maybe CanvasRenderingContext2D
 const renderText = ({
   text,
   width, height,

@@ -1,23 +1,16 @@
 import { useContext } from 'react';
 
 import CanvasContext from './CanvasContext';
-import { fmap } from '../../utils/Maybe';
+import { draw, drawRect, setFill } from '../../utils/canvas';
 
-const drawRect = ({ width, height, x, y, fill, stroke }) => ctx => {
-  ctx.save();
-  ctx.beginPath();
-  ctx.fillStyle = fill;
-  ctx.strokeStyle = stroke;
-  ctx.rect(x, y, width, height);
-  if(stroke) ctx.stroke();
-  if(fill) ctx.fill();
-  ctx.closePath();
-  ctx.restore();
-  return ctx;
-};
+// renderRect :: RectProps -> Maybe CanvasRenderingContext2D -> Maybe CanvasRenderingContext2D
+const renderRect = ({ width, height, x, y, fill }) => draw(
+  setFill(fill),
+  drawRect(x, y, width, height),
+);
 
 export default props => {
   const { ctx } = useContext(CanvasContext);
-  fmap(drawRect(props), ctx);
+  renderRect(props)(ctx);
   return null;
 };
