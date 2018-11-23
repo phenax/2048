@@ -6,6 +6,7 @@ import RootAction from './actions';
 
 import useReducer from './hooks/useReducer';
 import useControls from './hooks/useControls';
+
 import random from './utils/random';
 import * as blockUtils from './utils/block-utils';
 import Direction from './utils/Direction';
@@ -13,6 +14,8 @@ import Direction from './utils/Direction';
 import rootReducer from './reducers/rootReducer';
 
 import Grid from './components/Grid';
+import Canvas from './components/Canvas';
+import Rectangle from './components/Canvas/Rect';
 
 const GRID_COUNT = 4;
 
@@ -74,6 +77,12 @@ export default () => {
   return (
     <div className="App">
       <header className="App-header">2048</header>
+      <div style={{ padding: '20px' }}>
+        <Canvas height={100} width={100}>
+          <Rectangle x={10} y={10} height={10} width={10} fill={'red'} />
+          <Rectangle x={50} y={50} height={10} width={10} fill={'blue'} />
+        </Canvas>
+      </div>
       <div>
         <Stage width={canvasSize} height={canvasSize} {...handlers}>
           <Grid grid={grid} size={boxSize} margin={margin} background={'#eee'} />

@@ -7,6 +7,7 @@ import { Block } from '../utils/block-utils';
 // :: FlowDirection
 const FlowDirection = Enum([ 'Left', 'Right' ]);
 
+// FlowDirection.concatArray : ([a], [a]) -> [a]
 FlowDirection.concatArray = (arr1, arr2) => FlowDirection.cata({
   Left: () => arr1.concat(arr2),
   Right: () => arr2.concat(arr1),
