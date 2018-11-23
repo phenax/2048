@@ -1,5 +1,5 @@
 import React from 'react';
-import { range } from 'ramda';
+import { range, map } from 'ramda';
 
 import RootAction from './actions';
 
@@ -17,12 +17,11 @@ import Grid from './components/Grid';
 import Canvas from './components/Canvas';
 import NumberBlock from './components/NumberBlock';
 
+const toNumberGrid =
+  map(map(block => props => <NumberBlock {...props} block={block} />));
+
 export default React.memo(() => {
   const [ state, dispatch ] = useReducer(rootReducer, initialState);
-
-  const boxSize = 100;
-  const margin = 10;
-  const canvasSize = (boxSize + margin) * GRID_COUNT + margin;
 
   const handlers = useControls(({ direction }) => {
     const newRow = range(0, GRID_COUNT).map(blockUtils.zero);
@@ -37,16 +36,20 @@ export default React.memo(() => {
     });
   });
 
-  const grid = state.grid.map(row =>
-    row.map(block => props =>
-      <NumberBlock {...props} block={block} />));
+  const boxSize = 100;
+  const margin = 10;
+  const canvasSize = (boxSize + margin) * GRID_COUNT + margin;
 
   return (
     <div className="App">
       <header className="App-header">2048</header>
       <div>
         <Canvas width={canvasSize} height={canvasSize} {...handlers}>
-          <Grid grid={grid} size={boxSize} margin={margin} background={'#eee'} />
+          <Grid
+            grid={toNumberGrid(state.grid)}
+            size={boxSize}
+            margin={margin}
+          />
         </Canvas>
       </div>
     </div>

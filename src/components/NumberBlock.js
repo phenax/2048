@@ -7,13 +7,13 @@ const NumberBlock = ({ block, size, x, y }) => {
   return (
     <React.Fragment>
       <Rect {...bounds} fill={getColor(block.number)} />
-      <Text
+      {block.number !== 0 && <Text
         {...bounds}
         text={block.number}
         color="#333"
         fontSize={25}
         fontFamily="Arial"
-      />
+      />}
     </React.Fragment>
   );
 };
