@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "enum-fp": "^1.0.0-alpha.3",
+    "enum-fp": "^1.0.1",
     "konva": "^2.5.1",
     "pipey": "^0.0.4",
     "ramda": "^0.26.0",
