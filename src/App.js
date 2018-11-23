@@ -1,5 +1,4 @@
 import React from 'react';
-import { Stage, Text, Rect, Group } from 'react-konva';
 import { range } from 'ramda';
 
 import RootAction from './actions';
@@ -14,7 +13,7 @@ import Direction from './utils/Direction';
 import rootReducer from './reducers/rootReducer';
 
 import Grid from './components/Grid';
-import Canvas, { Rect as Rectangle, Text as CText } from './components/Canvas';
+import Canvas, { Rect, Text } from './components/Canvas';
 
 const GRID_COUNT = 4;
 
@@ -28,7 +27,7 @@ const initialState = {
 
 const NumberBlock = ({ block, size, x, y }) => {
   return (
-    <Group>
+    <React.Fragment>
       <Rect
         x={x}
         y={y}
@@ -48,7 +47,7 @@ const NumberBlock = ({ block, size, x, y }) => {
         align="center"
         verticalAlign="middle"
       />
-      </Group>
+      </React.Fragment>
   );
 };
 
@@ -76,25 +75,10 @@ export default () => {
   return (
     <div className="App">
       <header className="App-header">2048</header>
-      <div style={{ padding: '20px' }}>
-        <Canvas height={500} width={500}>
-          <Rectangle x={10} y={10} height={50} width={300} fill="#888" />
-          <CText
-            text="Hello world"
-            x={10} y={10}
-            height={50} width={300}
-            color="red"
-            fontFamily="sans-serif"
-            fontSize="16px"
-            textAlign="center"
-            verticalAlign="middle"
-          />
-        </Canvas>
-      </div>
       <div>
-        <Stage width={canvasSize} height={canvasSize} {...handlers}>
+        <Canvas width={canvasSize} height={canvasSize} {...handlers}>
           <Grid grid={grid} size={boxSize} margin={margin} background={'#eee'} />
-        </Stage>
+        </Canvas>
       </div>
     </div>
   );

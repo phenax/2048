@@ -1,20 +1,19 @@
 import React from 'react';
-import { Rect, Group } from 'react-konva';
+import { Rect } from '../Canvas';
 
 const getCoords = ({ row, col, size, margin }) => ({
   x: col * (size + margin) + margin,
   y: row * (size + margin) + margin,
 });
 
-export default ({ render, row = 0, col = 0, margin, size, background, border }) => (
-  <Group>
+export default ({ render, row = 0, col = 0, margin, size, background }) => (
+  <React.Fragment>
     <Rect
       {...getCoords({ row, col, margin, size })}
       height={size}
       width={size}
       fill={background}
-      stroke={border}
     />
     {render({ ...getCoords({ row, col, margin, size }), size, margin })}
-  </Group>
+  </React.Fragment>
 );

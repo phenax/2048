@@ -1,4 +1,3 @@
 import React from 'react';
-import { Group } from 'react-konva';
 
-export default ({ children }) => <Group>{children}</Group>;
+export default ({ children }) => <React.Fragment>{children}</React.Fragment>;
