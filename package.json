@@ -1,7 +1,11 @@
 {
   "name": "2048",
+  "description": "2048 game clone",
   "version": "0.1.0",
-  "private": true,
+  "homepage" : "http://phenax.github.io/2048",
+  "repository": {
+    "url": "https://github.com/phenax/2048"
+  },
   "dependencies": {
     "enum-fp": "^1.0.1",
     "pipey": "^0.0.4",
