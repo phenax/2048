@@ -1,34 +1,23 @@
 import { useContext } from 'react';
 
 import CanvasContext from './CanvasContext';
-import { fmap } from '../../utils/Maybe';
+// import { fmap } from '../../utils/Maybe';
 
-const drawText = ({ text, width, height, x, y, color, font, textAlign, verticalAlign }) => ctx => {
-  ctx.save();
-  ctx.beginPath();
-  ctx.fillStyle = color;
-  
-  ctx.font = font;
-  ctx.textAlign = textAlign;
-  ctx.textBaseline = verticalAlign;
+import { draw, setFont, drawText } from '../../utils/canvas';
 
-  const position = { x, y };
-
-  if(width && textAlign === 'center') {
-    position.x += width / 2;
-  }
-
-  if(height && verticalAlign === 'middle') {
-    position.y += height / 2;
-  }
-
-  ctx.fillText(text, position.x, position.y);
-  ctx.restore();
-  return ctx;
-};
+const renderText = ({
+  text,
+  width, height,
+  x, y,
+  color, fontFamily, fontSize,
+  textAlign = "center", verticalAlign = "middle",
+}) => draw(
+  setFont({ color, fontFamily, fontSize, textAlign, verticalAlign }),
+  drawText(text, x, y, width, height),
+);
 
 export default props => {
   const { ctx } = useContext(CanvasContext);
-  fmap(drawText(props), ctx);
+  renderText(props)(ctx);
   return null;
 };

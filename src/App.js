@@ -83,8 +83,9 @@ export default () => {
             text="Hello world"
             x={10} y={10}
             height={50} width={300}
-            color="#000"
-            font="16px sans-serif"
+            color="red"
+            fontFamily="sans-serif"
+            fontSize="16px"
             textAlign="center"
             verticalAlign="middle"
           />

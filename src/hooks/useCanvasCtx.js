@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 
-import { getSafeCanvasCtx } from '../components/Canvas/CanvasContext';
+import { getSafeCanvasCtx } from '../utils/canvas';
 
 export default (initialCtx = null) => {
   const [ ctx, setCanvasCtx ] = useState(getSafeCanvasCtx(initialCtx));
