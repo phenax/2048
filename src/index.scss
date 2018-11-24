@@ -1,0 +1,35 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body * {
+  box-sizing: border-box;
+}
+
+.game {
+  &--header {
+    width: 100%;
+    height: 50px;
+    margin: 0 auto;
+    padding: 1em 0;
+
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, .2);
+    text-align: center;
+    line-height: 10px;
+    background-color: #222;
+    color: #eee;
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+
+  &--container {
+    padding: 1em;
+    margin: auto;
+    text-align: center;
+  }
+}
+

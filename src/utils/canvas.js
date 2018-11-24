@@ -60,6 +60,20 @@ export const setFont = curry(({ fontFamily, fontSize, color, textAlign, vertical
   )(ctx)
 );
 
+export const clearCanvas = ctx => {
+  const { width, height } = ctx.canvas;
+  ctx.clearRect(0, 0, width, height);
+  return ctx;
+};
+
+export const drawShadow = curry(({ size, color, offsetX = 0, offsetY = 0 }, ctx) => {
+  ctx.shadowBlur = size;
+  ctx.shadowColor = color;
+  ctx.shadowOffsetX = offsetX;
+  ctx.shadowOffsetY = offsetY;
+  return ctx;
+});
+
 export const drawText = curry((text, x, y, width, height, ctx) => {
   ctx.translate(width / 2, height / 2);
   ctx.fillText(text, x, y);

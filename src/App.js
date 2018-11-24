@@ -48,9 +48,9 @@ export default React.memo(() => {
   const canvasSize = (boxSize + margin) * GRID_COUNT + margin;
 
   return (
-    <div className="App">
-      <header className="App-header">2048</header>
-      <div>
+    <div className="game">
+      <header className="game--header">2048</header>
+      <div className="game--container">
         <Canvas width={canvasSize} height={canvasSize} {...handlers}>
           <Grid
             grid={toNumberGrid(state.grid)}
